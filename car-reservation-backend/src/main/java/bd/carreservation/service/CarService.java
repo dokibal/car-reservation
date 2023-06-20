@@ -1,5 +1,9 @@
 package bd.carreservation.service;
 
-public interface CarService {
+import java.util.List;
 
+import bd.carreservation.model.Car;
+
+public interface CarService {
+	List<Car> getCars();
 }

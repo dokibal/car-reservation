@@ -6,4 +6,6 @@ import bd.carreservation.model.User;
 
 public interface UserService {
 	List<User> getUsers();
+
+	User validateUser(String userName, String password);
 }
