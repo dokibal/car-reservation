@@ -2,8 +2,8 @@ import { UserStore } from '../stores/user_store'
 import { Observer } from 'mobx-react'
 import { useNavigate } from 'react-router-dom'
 import UserService from '../services/user_service'
-import { User } from '../types/user'
 import { useEffect } from 'react'
+import {MAIN_PAGE, SIGN_IN_PAGE} from '../constants/config';
 
 import './sign_up_page.css'
 
@@ -132,12 +132,12 @@ const SignUpPage = ({ userStore }: SignUpPageProps) => {
         }
         userStore.currentUser = await UserService.addUser(userStore.currentUser);
         if (userStore.currentUser.id !== 0) {
-            navigate(`/reservations/${userStore.currentUser.id}`);
+            navigate(MAIN_PAGE);
         }
     }
 
     function navigateToLogin() {
-        navigate("/");
+        navigate(SIGN_IN_PAGE);
     }
 
     useEffect(()=>{

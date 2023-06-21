@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import UserService from '../services/user_service'
 import { User } from '../types/user'
 import { useEffect } from 'react'
+import {MAIN_PAGE, SIGN_UP_PAGE} from '../constants/config';
 
 import './login_page.css'
 
@@ -50,7 +51,7 @@ const LoginPage = ({ userStore }: LoginPageProps) => {
         //Only start user validation if both fields are filled
         let valid: Boolean = await validateUser();
         if (valid) {
-            navigate('/reservations/' + userStore.currentUser.id);
+            navigate(MAIN_PAGE);
         }
         else{
             userStore.pushSigninIssue("Incorrect combination of email and password. Please check your sign in data.");
@@ -58,7 +59,7 @@ const LoginPage = ({ userStore }: LoginPageProps) => {
     }
 
     const signup = () => {
-        navigate('/signup');
+        navigate(SIGN_UP_PAGE);
     }
 
     useEffect(() => {
