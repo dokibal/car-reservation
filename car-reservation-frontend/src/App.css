@@ -2,4 +2,19 @@
     height: 100%;
     max-height: 100%;
     overflow-y: auto;
-  }
+}
+.centered-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.action-button-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.action-button{
+  margin:10px;
+}

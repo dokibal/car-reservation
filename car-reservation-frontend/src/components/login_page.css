@@ -1,15 +1,4 @@
-.centered-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
 .user-text-box{
-    max-width: 20%;
+    max-width: 40%;
     margin: 10px;
-}
-.action-button{
-    display: flex;
-    flex-direction: row;
 }

@@ -10,6 +10,6 @@ import bd.carreservation.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	@Query("SELECT u FROM User u WHERE u.userName = :userName")
-	List<User> getUserByName(@Param("userName") String userName);
+	@Query("SELECT u FROM User u WHERE u.email = :email")
+	List<User> getUserByEmail(@Param("email") String email);
 }

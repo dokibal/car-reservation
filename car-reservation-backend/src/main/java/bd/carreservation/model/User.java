@@ -10,31 +10,28 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity()
-@Table(name = Constants.USER_TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = Constants.USER_NAME_COLUMN))
+@Table(name = Constants.USER_TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = Constants.EMAIL_COLUMN))
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	@Column(name = "user_name")
-	private String userName;
-	@Column(name = "password")
-	private String password;
-	@Column(name = "display_name")
-	private String displayName;
-	@Column(name = "email")
+	@Column(name = "email", nullable = false)
 	private String email;
-	@Column(name = "phone_number")
+	@Column(name = "password", nullable = false)
+	private String password;
+	@Column(name = "display_name", nullable = false)
+	private String displayName;
+	@Column(name = "phone_number", nullable = false)
 	private String phoneNumber;
 
 	public User() {
 
 	}
 
-	public User(long id, String userName, String password, String displayName, String email, String phoneNumber) {
+	public User(long id, String password, String displayName, String email, String phoneNumber) {
 		super();
 		this.id = id;
-		this.userName = userName;
 		this.password = password;
 		this.displayName = displayName;
 		this.email = email;
@@ -47,14 +44,6 @@ public class User {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 	public String getPassword() {

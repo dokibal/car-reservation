@@ -8,4 +8,8 @@ public interface UserService {
 	List<User> getUsers();
 
 	User validateUser(String userName, String password);
+
+	boolean userExists(String email);
+
+	User addUser(User user);
 }
