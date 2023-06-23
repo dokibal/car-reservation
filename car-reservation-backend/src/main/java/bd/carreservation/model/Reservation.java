@@ -19,7 +19,6 @@ import jakarta.persistence.Table;
 public class Reservation {
 
 	@Id
-
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 

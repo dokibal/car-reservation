@@ -1,0 +1,14 @@
+.calendar-container{
+    display:flex;
+    flex-direction: row;
+}
+.day-reservations-container{
+    display:flex;
+    flex-direction: column;
+}
+.reservation-slot{
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+}
