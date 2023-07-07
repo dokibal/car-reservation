@@ -1,9 +1,8 @@
 package bd.carreservation.service.impl;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import bd.carreservation.model.Reservation;
@@ -21,8 +20,14 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public List<Reservation> getReservations(LocalDate startDate, LocalDate endDate) {
+	public List<Reservation> getReservations(LocalDateTime startDate, LocalDateTime endDate) {
 
-		return reservationRepository.findAll(Sort.by(Sort.Direction.ASC, "startDate"));
+		return reservationRepository.findReservationByDate(startDate, endDate);
+	}
+
+	@Override
+	public Reservation addReservation(Reservation reservation) {
+
+		return reservationRepository.save(reservation);
 	}
 }

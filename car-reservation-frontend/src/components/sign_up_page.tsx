@@ -127,7 +127,6 @@ const SignUpPage = ({ userStore }: SignUpPageProps) => {
 
     async function signup() {
         if (!validateUserInput()) {
-            //TODO: error box
             return;
         }
         userStore.currentUser = await UserService.addUser(userStore.currentUser);

@@ -1,0 +1,20 @@
+.car-container{
+    display:flex;
+    flex-direction: column;
+    padding:50px;
+}
+.card-grid {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 10px;
+}
+.new-car-button{
+    margin: 20px;
+    width: fit-content;
+}
+.over-flow-text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

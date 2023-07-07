@@ -10,12 +10,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-
 @Table(name = Constants.CAR_TABLE_NAME)
 public class Car {
 
 	@Id
-
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 

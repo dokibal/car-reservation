@@ -20,12 +20,23 @@ export class ReservationImpl implements Reservation{
     public user: User;
     public car: Car;
 
-    constructor(){
+    constructor(startDate? : Date){
         this.id = 0;
         this.creationDate = new Date();
-        this.startDate = new Date();
-        this.endDate = new Date();
+        if(startDate){
+            this.startDate = startDate;
+            let endDate : Date = new Date(startDate);
+            endDate.setMinutes(59);
+            endDate.setSeconds(59);
+            endDate.setMilliseconds(999);
+            this.endDate = endDate;
+        }
+        else{
+            this.startDate = new Date();
+            this.endDate = new Date();
+        }
         this.car = new CarImpl();
         this.user = new UserImpl();
     }
+
 }

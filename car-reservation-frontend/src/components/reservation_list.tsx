@@ -3,6 +3,7 @@ import { UserStore } from "../stores/user_store";
 import { ReservationStore } from "../stores/reservation_store";
 import { Observer } from 'mobx-react'
 import ReservationCalendar from "./reservation_calendar";
+import { useParams } from "react-router-dom";
 
 interface ReservationListProps {
     userStore: UserStore;
@@ -11,6 +12,8 @@ interface ReservationListProps {
 }
 
 const ReservationList = ({ userStore, reservationStore, carStore }: ReservationListProps) => {
+
+    const {carId} = useParams();
 
     return (
         <Observer>

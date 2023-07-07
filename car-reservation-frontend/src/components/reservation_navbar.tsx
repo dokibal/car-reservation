@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {MAIN_PAGE, SIGN_IN_PAGE, SIGN_UP_PAGE, RESERVATION_PAGE} from '../constants/config';
+import {MAIN_PAGE, SIGN_IN_PAGE, SIGN_UP_PAGE, RESERVATION_PAGE, CAR_PAGE} from '../constants/config';
 
 const ReservationNavbar = () => {
 
@@ -18,8 +18,8 @@ const ReservationNavbar = () => {
                             <Navbar.Collapse id="basic-navbar-nav">
                                 <Nav className="me-auto">
                                     <Nav.Link href={MAIN_PAGE}>Home</Nav.Link>
-                                    <Nav.Link href={RESERVATION_PAGE}>Reservations</Nav.Link>
-                                    <Nav.Link href={MAIN_PAGE}>Cars</Nav.Link>
+                                    <Nav.Link href={RESERVATION_PAGE + "/0"}>Reservations</Nav.Link>
+                                    <Nav.Link href={CAR_PAGE}>Cars</Nav.Link>
                                 </Nav>
                             </Navbar.Collapse>
                             <Navbar.Collapse className="justify-content-end">

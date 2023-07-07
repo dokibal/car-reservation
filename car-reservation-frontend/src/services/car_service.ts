@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { RESERVATION_API_BASE_URL } from '../constants/config';
 import { Car } from '../types/car';
+import { Nullable } from '../types/nullable';
 
 class CarService{
     async getCars(){
@@ -11,6 +12,22 @@ class CarService{
         }
         catch(err){
             console.error(err);
+        }
+    }
+
+    async save(car : Car) : Promise<Nullable<Car>>{
+        let url:string = RESERVATION_API_BASE_URL + "/car";
+        try{
+            if(car.id){
+                return (await axios.put(url+`/${car.id}`, car)).data;
+            }
+            else{
+                return (await axios.post(url, car)).data;
+            }
+        }
+        catch(err){
+            console.error(err);
+            return null;
         }
     }
 }
