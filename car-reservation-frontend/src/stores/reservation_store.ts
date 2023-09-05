@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx'
+import { makeObservable, observable, action, computed } from 'mobx'
 import { Reservation, ReservationImpl } from '../types/reservation';
 import ReservationService from '../services/reservation_service';
 import { Days } from '../types/days'
@@ -9,8 +9,9 @@ export class ReservationStore {
     reservations: Reservation[] = [];
     viewedReservations: Map<number, Map<Days, Reservation>> = new Map();
     viewedDates: Map<Days, Date> = new Map();
-    currentDay: number = 0;
     showReservationDialog : boolean = false;
+    startDate: Date = new Date();
+    carId : number = 0;
 
     //Constants
     readonly hours = Array.from(Array(24).keys()).map(x => x);
@@ -23,9 +24,48 @@ export class ReservationStore {
             viewedReservations: observable,
             viewedDates: observable,
             showReservationDialog: observable,
+            initReservations: action,
             fillReservationMap: action,
-            setShowReservationDialog: action
+            setShowReservationDialog: action,
+            startDate: observable,
+            formattedStartDate: computed,
+            setStartDate: action,
+            clearViewedReservations: action,
+            addReservation: action,
+            clearViewedDates: action,
+            addDate: action,
+            carId: observable,
+            setCarId: action
         });
+    }
+
+    clearViewedReservations(){
+        this.viewedReservations.clear();
+    }
+
+    addReservation(hour : number, reservation : Map<Days, Reservation>){
+        this.viewedReservations.set(hour, reservation);
+    }
+
+    clearViewedDates(){
+        this.viewedDates.clear();
+    }
+
+    addDate(day : Days, date : Date){
+        this.viewedDates.set(day, date);
+    }
+
+    setStartDate(date : Date){
+        this.startDate = date;
+    }
+
+    setCarId(carId : number){
+        this.carId = carId;
+    }
+
+    get formattedStartDate(){
+        let formattedDate = this.startDate.getFullYear().toString()+"-"+(this.startDate.getMonth()+1).toLocaleString('hu-HU',{minimumIntegerDigits:2})+"-"+this.startDate.getDate().toLocaleString('hu-HU',{minimumIntegerDigits:2});
+        return formattedDate;
     }
 
     async save() : Promise<Nullable<Reservation>>{
@@ -33,33 +73,38 @@ export class ReservationStore {
     }
 
     async getReservations(startDate: Date, endDate: Date) {
-        this.reservations = await ReservationService.getReservations(startDate, endDate);
+        this.reservations = await ReservationService.getReservationsByCar(startDate, endDate, this.carId);
     }
 
-    async fillReservationMap() {
-
+    async initReservations() {
         //Get now date and time
         let now: Date = new Date();
 
         //Query reservations of the upcoming week
-        let startDate: Date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        this.currentDay = startDate.getDay();
-        let endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 7);
+        this.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        await this.getReservations(startDate, endDate);
+        await this.fillReservationMap();
+    }
 
-        this.viewedReservations.clear();
-        this.viewedDates.clear();
+    async fillReservationMap() {
 
-        this.hours.map((hour, hid)=>{
+        let endDate = new Date(this.startDate);
+        endDate.setDate(this.startDate.getDate() + 7);
+        console.log(endDate);
+
+        await this.getReservations(this.startDate, endDate);
+
+        this.clearViewedReservations();
+        this.clearViewedDates();
+
+        this.hours.forEach((hour, hid)=>{
             let hourEmptyReservations : Map<Days, Reservation> = new Map();
-            for(let date = new Date(startDate);date<endDate;date.setDate(date.getDate()+1)){
+            for(let date = new Date(this.startDate);date<endDate;date.setDate(date.getDate()+1)){
                 
                 let currentDateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour);
                 hourEmptyReservations.set(date.getDay() as Days, new ReservationImpl(currentDateTime));
             }
-            this.viewedReservations.set(hour, hourEmptyReservations);
+            this.addReservation(hour, hourEmptyReservations);
         });
         
         this.reservations.forEach(res=>{
@@ -67,13 +112,12 @@ export class ReservationStore {
             let hourReservations = this.viewedReservations.get(hour);
             if(hourReservations){
                 hourReservations.set(res.startDate.getDay() as Days, res);
-                this.viewedReservations.set(hour, hourReservations);
+                this.addReservation(hour, hourReservations);
             }
         });
-        console.log(this.viewedReservations);
 
-        for(let date : Date = new Date(startDate); date < endDate; date.setDate(date.getDate()+1)){
-            this.viewedDates.set(date.getDay() as Days, new Date(date));
+        for(let date : Date = new Date(this.startDate); date < endDate; date.setDate(date.getDate()+1)){
+            this.addDate(date.getDay() as Days, new Date(date));
         }
     }
 

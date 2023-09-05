@@ -4,8 +4,9 @@ import { Reservation } from '../types/reservation';
 import { Nullable } from '../types/nullable';
 
 class ReservationService{
-    async getReservations(startDate : Date, endDate : Date){
-        let url:string = RESERVATION_API_BASE_URL + "/reservations";
+
+    async getReservationsByCar(startDate : Date, endDate : Date, carId : number){
+        let url:string = RESERVATION_API_BASE_URL + "/reservations/"+carId;
         try{
             let startDateStr : string = startDate.toISOString();
             let endDateStr : string = endDate.toISOString();

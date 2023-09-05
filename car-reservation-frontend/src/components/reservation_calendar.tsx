@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { CarStore } from "../stores/car_store";
 import { UserStore } from "../stores/user_store";
 import { ReservationStore } from "../stores/reservation_store";
@@ -17,10 +16,6 @@ interface ReservationCalendarProps {
 
 const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalendarProps) => {
 
-    useEffect(() => {
-        reservationStore.fillReservationMap();
-    });
-
     function formatNumberWithLeadingZero(num: number): string {
         return new Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format(num);
     }
@@ -33,7 +28,7 @@ const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalenda
             <div>
                 {
                     formatNumberWithLeadingZero(date.getDate())
-                    + "." +
+                    + "/" +
                     formatNumberWithLeadingZero(date.getMonth() + 1)
                 }
             </div>

@@ -21,7 +21,6 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	public List<Reservation> getReservations(LocalDateTime startDate, LocalDateTime endDate) {
-
 		return reservationRepository.findReservationByDate(startDate, endDate);
 	}
 
@@ -29,5 +28,10 @@ public class ReservationServiceImpl implements ReservationService {
 	public Reservation addReservation(Reservation reservation) {
 
 		return reservationRepository.save(reservation);
+	}
+
+	@Override
+	public List<Reservation> getReservationsByCar(LocalDateTime startDate, LocalDateTime endDate, long carId) {
+		return reservationRepository.findReservationByDateByCar(startDate, endDate, carId);
 	}
 }

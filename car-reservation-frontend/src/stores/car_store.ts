@@ -29,7 +29,6 @@ export class CarStore {
   async getCars() {
     const fetchedCars = await CarService.getCars();
     if (fetchedCars) {
-      console.log(fetchedCars);
       this.cars = fetchedCars;
     }
   }
