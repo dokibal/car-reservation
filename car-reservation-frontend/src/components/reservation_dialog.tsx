@@ -1,6 +1,6 @@
 import { UserStore } from "../stores/user_store";
 import { ReservationStore } from "../stores/reservation_store";
-import { Observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import { Modal } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 
@@ -31,63 +31,59 @@ const ReservationDialog = ({ userStore, reservationStore }: ReservationDialogPro
     }
 
     const save = async () => {
-        let reservation : Nullable<Reservation> = await reservationStore.save();
-        if(reservation !== null && reservation.id){
+        let reservation: Nullable<Reservation> = await reservationStore.save();
+        if (reservation !== null && reservation.id) {
             reservationStore.setShowReservationDialog(false);
+            reservationStore.reloadReservations();
         }
     }
 
     return (
-        <Observer>
-            {() => {
-                return (
-                    <div>
-                        <Modal
-                            show={reservationStore.showReservationDialog}
-                            onHide={() => { reservationStore.setShowReservationDialog(false) }}
-                            size="lg"
-                            aria-labelledby="contained-modal-title-vcenter"
-                            centered
-                        >
 
-                            <Modal.Header closeButton>
-                                <Modal.Title>Confirm reservation</Modal.Title>
-                            </Modal.Header>
+        <div>
+            <Modal
+                show={reservationStore.showReservationDialog}
+                onHide={() => { reservationStore.setShowReservationDialog(false) }}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
 
-                            <Modal.Body>
-                                {reservationStore.currentReservation.id ?
-                                    <div>
-                                        {showReservationDetails(reservationStore.currentReservation)}
-                                    </div>
-                                    :
-                                    <div>
-                                        <p>Are you sure you would like to confirm the following reservation?</p>
-                                        {showReservationDetails(reservationStore.currentReservation)}
-                                    </div>
-                                }
-                            </Modal.Body>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm reservation</Modal.Title>
+                </Modal.Header>
 
-                            <Modal.Footer>
-                                {reservationStore.currentReservation.id ? (
+                <Modal.Body>
+                    {reservationStore.currentReservation.id ?
+                        <div>
+                            {showReservationDetails(reservationStore.currentReservation)}
+                        </div>
+                        :
+                        <div>
+                            <p>Are you sure you would like to confirm the following reservation?</p>
+                            {showReservationDetails(reservationStore.currentReservation)}
+                        </div>
+                    }
+                </Modal.Body>
 
-                                    reservationStore.currentReservation.user.id === userStore.currentUser.id ?
-                                        <Button variant="danger">Cancel</Button>
-                                        :
-                                        <div>
-                                        </div>
-                                )
-                                    :
-                                    <Button variant="primary" onClick={() => { save() }}>Confirm</Button>
-                                }
-                                <Button variant="secondary" onClick={() => { reservationStore.setShowReservationDialog(false) }}>Close</Button>
+                <Modal.Footer>
+                    {reservationStore.currentReservation.id ? (
 
-                            </Modal.Footer>
-                        </Modal>
-                    </div>
-                )
-            }}
-        </Observer >
+                        reservationStore.currentReservation.user.id === userStore.currentUser.id ?
+                            <Button variant="danger">Cancel</Button>
+                            :
+                            <div>
+                            </div>
+                    )
+                        :
+                        <Button variant="primary" onClick={() => { save() }}>Confirm</Button>
+                    }
+                    <Button variant="secondary" onClick={() => { reservationStore.setShowReservationDialog(false) }}>Close</Button>
+
+                </Modal.Footer>
+            </Modal>
+        </div>
     )
 }
 
-export default ReservationDialog;
+export default observer(ReservationDialog);

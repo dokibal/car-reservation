@@ -16,7 +16,15 @@ class ReservationService{
                     endDate : endDateStr
                 }
             })).data;
-            return reservations;
+
+            //Backend provides dates as string objects.
+            //Need to convert date strings to date objects. 
+            return reservations.map((res) => ({
+                ...res,
+                startDate: new Date(res.startDate),
+                endDate: new Date(res.endDate),
+                creationDate: new Date(res.creationDate)
+            }));
         }
         catch(err){
             console.error(err);

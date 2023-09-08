@@ -1,10 +1,8 @@
 import { CarStore } from "../stores/car_store";
 import { UserStore } from "../stores/user_store";
 import { ReservationStore } from "../stores/reservation_store";
-import { Observer } from 'mobx-react';
-
+import { observer } from 'mobx-react-lite';
 import "./reservation_calendar.css";
-import { toHaveFormValues } from "@testing-library/jest-dom/matchers";
 import { Reservation } from "../types/reservation";
 import ReservationDialog from "./reservation_dialog";
 import { Days } from "../types/days";
@@ -46,58 +44,59 @@ const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalenda
             return;
         }
         reservationStore.currentReservation = reservation;
+        reservationStore.currentReservation.user = userStore.currentUser;
         reservationStore.setShowReservationDialog(true);
     };
 
     return (
-        <Observer>
-            {() => {
-                return (
-                    <div className="centered-content">
-                        <ReservationDialog userStore={userStore} reservationStore={reservationStore} />
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th key={-1}></th>
+        <div className="centered-content">
+            <ReservationDialog userStore={userStore} reservationStore={reservationStore} />
+            <table>
+                <thead>
+                    <tr>
+                        <th key={-1}></th>
+                        {
+                            Array.from(reservationStore.viewedDates).map(dateMap => {
+                                return (
+                                    <th className="table-center" key={dateMap[0]}>
+                                        {formatDate(dateMap[1])}
+                                    </th>
+                                )
+                            })
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        Array.from(reservationStore.viewedReservations).map((hour, hid) => {
+                            console.log("Hour: " + hour);
+                            return (
+                                <tr key={hid}>
+                                    <td className="table-center">{formatHour(hour[0])}</td>
                                     {
-                                        Array.from(reservationStore.viewedDates).map(dateMap => {
+                                        Array.from(hour[1]).map((res, did) => {
+                                            console.log("date: " + res[1].startDate);
+                                            console.log("Day: " + res[0]);
+                                            if(res[1].id){
+                                                console.log(res[1].startDate);
+                                            }
                                             return (
-                                                <th className="table-center" key={dateMap[0]}>
-                                                    {formatDate(dateMap[1])}
-                                                </th>
+                                                <td className="table-center" key={did}>
+                                                    <div className={"reservation-slot " + (res[1].id ? "reserved" : "free")} onClick={(event) => { onReservationClicked(event, res[1]) }}>
+
+                                                    </div>
+                                                </td>
                                             )
                                         })
                                     }
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    Array.from(reservationStore.viewedReservations).map((hour, hid) => {
-                                        return (
-                                            <tr key={hid}>
-                                                <td className="table-center">{formatHour(hour[0])}</td>
-                                                {
-                                                    Array.from(hour[1]).map((res, did) => {
-                                                        return (
-                                                            <td className="table-center" key={did}>
-                                                                <div className={"reservation-slot " + (res[1].id ? "reserved" : "free")} onClick={(event) => { onReservationClicked(event, res[1]) }}>
-
-                                                                </div>
-                                                            </td>
-                                                        )
-                                                    })
-                                                }
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                )
-            }}
-        </Observer>
+                            )
+                        })
+                    }
+                </tbody>
+            </table>
+        </div>
     )
 }
 
-export default ReservationCalendar;
+export default observer(ReservationCalendar);

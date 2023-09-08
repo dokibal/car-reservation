@@ -46,7 +46,6 @@ public class ReservationController {
 
 	@PostMapping("/reservation")
 	public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-		System.out.println(reservation);
 		return ResponseEntity.ok(reservationService.addReservation(reservation));
 	}
 }

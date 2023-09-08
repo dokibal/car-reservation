@@ -1,5 +1,5 @@
 import { UserStore } from '../stores/user_store'
-import { Observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom'
 import UserService from '../services/user_service'
 import { useEffect } from 'react'
@@ -129,7 +129,7 @@ const SignUpPage = ({ userStore }: SignUpPageProps) => {
         if (!validateUserInput()) {
             return;
         }
-        userStore.currentUser = await UserService.addUser(userStore.currentUser);
+        userStore.signin(await UserService.addUser(userStore.currentUser));
         if (userStore.currentUser.id !== 0) {
             navigate(MAIN_PAGE);
         }
@@ -145,9 +145,6 @@ const SignUpPage = ({ userStore }: SignUpPageProps) => {
     })
 
     return (
-        <Observer>
-            {() => {
-                return (
                     <div className="centered-content">
                         {userStore.signupIssues.length ?
                             <div className="alert alert-danger" role="alert">
@@ -226,8 +223,5 @@ const SignUpPage = ({ userStore }: SignUpPageProps) => {
                         </form>
                     </div>
                 )
-            }}
-        </Observer>
-    )
 }
-export default SignUpPage;
+export default observer(SignUpPage);

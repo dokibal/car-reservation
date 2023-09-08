@@ -1,8 +1,10 @@
 import {makeObservable, observable, action } from 'mobx'
 import { User, UserImpl } from '../types/user';
 import UserService from '../services/user_service';
+import { USER_KEY } from '../constants/config';
 
 export class UserStore {
+
     users : User[] | null= null;
     currentUser : User = new UserImpl();
     signupIssues : string[] = [];
@@ -21,8 +23,12 @@ export class UserStore {
         clearSignupIssues: action,
         pushSignupIssue: action,
         clearSigninIssues: action,
-        pushSigninIssue: action
+        pushSigninIssue: action,
+        signout: action,
+        signin: action,
+        loadUser: action
       });
+
     }
   
     async getUsers(){
@@ -66,6 +72,23 @@ export class UserStore {
     
     pushSigninIssue(issue : string){
         this.signinIssues.push(issue);
+    }
+
+    signout(){
+        this.currentUser = new UserImpl();
+        console.log(this.currentUser);
+    }
+
+    signin(user : User){
+        this.currentUser = user;
+        localStorage.setItem(USER_KEY,JSON.stringify(this.currentUser));
+    }
+
+    loadUser(){
+        let userString = localStorage.getItem(USER_KEY);
+        if(userString){
+            this.currentUser = JSON.parse(userString);
+        }
     }
 }
   

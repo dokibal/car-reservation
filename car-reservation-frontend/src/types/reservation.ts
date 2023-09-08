@@ -20,7 +20,7 @@ export class ReservationImpl implements Reservation{
     public user: User;
     public car: Car;
 
-    constructor(startDate? : Date){
+    constructor(startDate? : Date, car? : Car){
         this.id = 0;
         this.creationDate = new Date();
         if(startDate){
@@ -35,7 +35,7 @@ export class ReservationImpl implements Reservation{
             this.startDate = new Date();
             this.endDate = new Date();
         }
-        this.car = new CarImpl();
+        this.car = car ?? new CarImpl();
         this.user = new UserImpl();
     }
 
