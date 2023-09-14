@@ -24,17 +24,22 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
     useEffect(() => {
         userStore.loadUser();
         //Fetch cars to fill the dropdown
-        carStore.getCars();
+        //Inner function trick to be able to use async function inside useEffect
+        const fetchData = async () => {
+            await carStore.getCars();
 
-        //Check if the carId parameter is valid
-        if (carId && (+carId!==0) && !isNaN(+carId)) {
-            let car: Car | undefined = getCarById(+carId);
-            if (car) {
-                reservationStore.setCar(car);
-                reservationStore.reloadReservations();
+            //Check if the carId parameter is valid
+            if (carId && (+carId !== 0) && !isNaN(+carId)) {
+                let car: Car | undefined = getCarById(+carId);
+                if (car) {
+                    reservationStore.setCar(car);
+                    reservationStore.reloadReservations();
+                }
             }
         }
-    },[userStore, reservationStore]);
+
+        fetchData();
+    }, [userStore, reservationStore]);
 
     let getCarById = (id: number): Car | undefined => {
         let cars: Car[] | undefined = carStore.cars?.filter(car => { return car.id === id; });
@@ -48,7 +53,7 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
             }
         }
         else {
-            console.error("Unexpected number of cars: no car exists with the given id.");
+            console.error("Unexpected number of cars: no car exists with id: " + id);
             return undefined;
         }
     }
@@ -76,27 +81,27 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
     }
 
     return (
-                    <div>
-                        <DropdownButton className="d-flex justify-content-center mb-2" id="dropdown-basic-button" title={reservationStore.car ? displayName(reservationStore.car) : "Select a car"} onSelect={handleCarDropdownSelection}>
-                            {
-                                carStore.cars?.map(car => {
-                                    return (
-                                        <Dropdown.Item eventKey={car.id}>{displayName(car)}</Dropdown.Item>
-                                    )
-                                }
-                                )
-                            }
-                        </DropdownButton>
-                        <Form className="d-flex justify-content-center mb-2">
-                            <Form.Control type="date" className="narrow-datepicker" onChange={handleDateChange} />
-                        </Form>
-                        {
-                            reservationStore.car && reservationStore.car.id ?
-                                <ReservationCalendar userStore={userStore} reservationStore={reservationStore} /> :
-                                <div></div>
-                        }
-                    </div>
-                )
+        <div>
+            <DropdownButton className="d-flex justify-content-center mb-2" id="dropdown-basic-button" title={reservationStore.car ? displayName(reservationStore.car) : "Select a car"} onSelect={handleCarDropdownSelection}>
+                {
+                    carStore.cars?.map(car => {
+                        return (
+                            <Dropdown.Item key={car.id}>{displayName(car)}</Dropdown.Item>
+                        )
+                    }
+                    )
+                }
+            </DropdownButton>
+            <Form className="d-flex justify-content-center mb-2">
+                <Form.Control type="date" className="narrow-datepicker" onChange={handleDateChange} />
+            </Form>
+            {
+                reservationStore.car && reservationStore.car.id ?
+                    <ReservationCalendar userStore={userStore} reservationStore={reservationStore} /> :
+                    <div></div>
+            }
+        </div>
+    )
 }
 
 export default observer(ReservationList);

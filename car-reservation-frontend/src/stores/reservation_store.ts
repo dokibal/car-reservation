@@ -80,6 +80,10 @@ export class ReservationStore {
         return await ReservationService.save(this.currentReservation);
     }
 
+    async cancel(): Promise<boolean> {
+        return await ReservationService.cancel(this.currentReservation);
+    }
+
     async getReservations(startDate: Date, endDate: Date) {
         if (this.car && this.car.id) {
             this.reservations = await ReservationService.getReservationsByCar(startDate, endDate, this.car.id);
@@ -111,6 +115,7 @@ export class ReservationStore {
 
         this.reservations.forEach(res => {
             let hour: number = res.startDate.getHours();
+
             let hourReservations = this.viewedReservations.get(hour);
             if (hourReservations) {
                 hourReservations.set(res.startDate.getDay() as Days, res);

@@ -16,7 +16,7 @@ const CarCard = ({ car, carStore }: CarCardProps) => {
     const navigate = useNavigate();
 
     const editCar = (event: React.MouseEvent<HTMLElement>) => {
-        event.preventDefault();
+        event.stopPropagation();
         carStore.currentCar = car;
         carStore.setShowCarDialog(true);
     };

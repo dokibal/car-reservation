@@ -38,6 +38,14 @@ const ReservationDialog = ({ userStore, reservationStore }: ReservationDialogPro
         }
     }
 
+    const cancel = async () => {
+        let deleted = await reservationStore.cancel();
+        reservationStore.setShowReservationDialog(false);
+        if (deleted) {
+            reservationStore.reloadReservations();
+        }
+    }
+
     return (
 
         <div>
@@ -70,7 +78,7 @@ const ReservationDialog = ({ userStore, reservationStore }: ReservationDialogPro
                     {reservationStore.currentReservation.id ? (
 
                         reservationStore.currentReservation.user.id === userStore.currentUser.id ?
-                            <Button variant="danger">Cancel</Button>
+                            <Button variant="danger" onClick={() => { cancel() }}>Cancel</Button>
                             :
                             <div>
                             </div>

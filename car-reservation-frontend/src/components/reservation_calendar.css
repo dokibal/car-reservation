@@ -23,4 +23,8 @@
 }
 .reserved{
     background-color: red;
+    cursor: default;
+}
+.own{
+    background-color: yellow;
 }

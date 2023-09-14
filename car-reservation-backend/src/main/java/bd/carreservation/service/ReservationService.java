@@ -11,4 +11,6 @@ public interface ReservationService {
 	public List<Reservation> getReservationsByCar(LocalDateTime startDate, LocalDateTime endDate, long carId);
 
 	public Reservation addReservation(Reservation reservation);
+
+	public void cancelReservation(Long id);
 }

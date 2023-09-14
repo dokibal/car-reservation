@@ -142,7 +142,7 @@ const SignUpPage = ({ userStore }: SignUpPageProps) => {
     useEffect(()=>{
         userStore.clearSigninIssues();
         userStore.resetUser();
-    })
+    },[userStore])
 
     return (
                     <div className="centered-content">

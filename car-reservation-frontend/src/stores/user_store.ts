@@ -76,7 +76,7 @@ export class UserStore {
 
     signout(){
         this.currentUser = new UserImpl();
-        console.log(this.currentUser);
+        localStorage.setItem(USER_KEY, JSON.stringify(this.currentUser));
     }
 
     signin(user : User){
