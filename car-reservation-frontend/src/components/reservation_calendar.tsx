@@ -1,4 +1,3 @@
-import { CarStore } from "../stores/car_store";
 import { UserStore } from "../stores/user_store";
 import { ReservationStore } from "../stores/reservation_store";
 import { observer } from 'mobx-react-lite';
@@ -45,7 +44,7 @@ const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalenda
 
     const onReservationClicked = (event: React.MouseEvent<HTMLElement>, reservation: Reservation) => {
         //Don't do anything if the slot is already reserved and not by the current user
-        if (reservation.id && reservation.user.id != userStore.currentUser.id) {
+        if (reservation.id && reservation.user.id !== userStore.currentUser.id) {
             return;
         }
         if (!reservation.car || !reservation.car.id){
@@ -69,7 +68,7 @@ const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalenda
         }
 
         if(res.id){
-            if(userStore.currentUser && res.user.id == userStore.currentUser.id){
+            if(userStore.currentUser && res.user.id === userStore.currentUser.id){
                 return baseClass + " own";
             }
             else{

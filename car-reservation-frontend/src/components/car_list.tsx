@@ -18,7 +18,7 @@ const CarList = ({ userStore, carStore }: CarCardProps) => {
     useEffect(() => {
         userStore.loadUser();
         carStore.getCars();
-    },[]);
+    },[userStore, carStore]);
 
     const addNewCar = () => {
         carStore.clearCurrentCar();

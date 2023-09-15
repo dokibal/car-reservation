@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import UserService from '../services/user_service'
 import { User } from '../types/user'
 import { useEffect } from 'react'
-import { MAIN_PAGE, RESERVATION_PAGE, SIGN_UP_PAGE, USER_KEY } from '../constants/config';
+import { MAIN_PAGE, RESERVATION_PAGE, SIGN_UP_PAGE} from '../constants/config';
 
 import './login_page.css'
 

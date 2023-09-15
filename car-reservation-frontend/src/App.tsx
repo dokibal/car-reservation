@@ -8,7 +8,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { observableUserStore } from './stores/user_store';
 import { observableReservationStore } from './stores/reservation_store';
 import { observableCarStore } from './stores/car_store'
-import {MAIN_PAGE, SIGN_IN_PAGE, SIGN_UP_PAGE, RESERVATION_PAGE, CAR_PAGE, USER_KEY} from './constants/config';
+import {MAIN_PAGE, SIGN_IN_PAGE, SIGN_UP_PAGE, RESERVATION_PAGE, CAR_PAGE} from './constants/config';
 import CarList from './components/car_list';
 import { useEffect } from 'react';
 
@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     observableUserStore.loadUser();
-  },[observableUserStore])
+  });
 
   return (
     <div className="fullscreen-container">
