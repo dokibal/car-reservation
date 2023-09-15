@@ -1,10 +1,10 @@
 import { UserStore } from '../stores/user_store'
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import UserService from '../services/user_service'
 import { User } from '../types/user'
 import { useEffect } from 'react'
-import { MAIN_PAGE, SIGN_UP_PAGE, USER_KEY } from '../constants/config';
+import { MAIN_PAGE, RESERVATION_PAGE, SIGN_UP_PAGE, USER_KEY } from '../constants/config';
 
 import './login_page.css'
 
@@ -15,6 +15,8 @@ interface LoginPageProps {
 const LoginPage = ({ userStore }: LoginPageProps) => {
 
     const navigate = useNavigate();
+
+    const { carId } = useParams();
 
     const typeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
         userStore.editEmail(event.target.value);
@@ -34,6 +36,14 @@ const LoginPage = ({ userStore }: LoginPageProps) => {
         }
     }
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+
+        if (event.code === "Enter") {
+            login();
+        }
+
+    }
+
     const login = async () => {
         userStore.clearSigninIssues();
         validateEmptyField(userStore.currentUser.email, "email");
@@ -45,7 +55,12 @@ const LoginPage = ({ userStore }: LoginPageProps) => {
         let user: User = await validateUser();
         if (user && user.id) {
             userStore.signin(user);
-            navigate(MAIN_PAGE);
+            if (carId) {
+                navigate(`${RESERVATION_PAGE}/${carId}`);
+            }
+            else {
+                navigate(MAIN_PAGE);
+            }
         }
         else {
             userStore.pushSigninIssue("Incorrect combination of email and password. Please check your sign in data.");
@@ -59,11 +74,11 @@ const LoginPage = ({ userStore }: LoginPageProps) => {
     useEffect(() => {
         userStore.clearSignupIssues();
         userStore.loadUser();
-    },[userStore])
+    }, [userStore])
 
     return (
 
-        <div className="centered-content">
+        <div className="centered-content" onKeyDownCapture={handleKeyDown}>
             {userStore.signinIssues.length ?
                 <div className="alert alert-danger" role="alert">
                     <strong>

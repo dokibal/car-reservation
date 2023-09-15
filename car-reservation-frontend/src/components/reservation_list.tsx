@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { CarStore } from "../stores/car_store";
 import { UserStore } from "../stores/user_store";
 import { ReservationStore } from "../stores/reservation_store";
 import { observer } from 'mobx-react-lite';
 import ReservationCalendar from "./reservation_calendar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Form from "react-bootstrap/Form"
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import "./reservation_list.css"
 import { Car } from "../types/car";
+import { RESERVATION_PAGE } from "../constants/config";
+import "./reservation_calendar.css"
 
 interface ReservationListProps {
     userStore: UserStore;
@@ -21,27 +23,9 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
 
     const { carId } = useParams();
 
-    useEffect(() => {
-        userStore.loadUser();
-        //Fetch cars to fill the dropdown
-        //Inner function trick to be able to use async function inside useEffect
-        const fetchData = async () => {
-            await carStore.getCars();
+    const navigate = useNavigate();
 
-            //Check if the carId parameter is valid
-            if (carId && (+carId !== 0) && !isNaN(+carId)) {
-                let car: Car | undefined = getCarById(+carId);
-                if (car) {
-                    reservationStore.setCar(car);
-                    reservationStore.reloadReservations();
-                }
-            }
-        }
-
-        fetchData();
-    }, [userStore, reservationStore]);
-
-    let getCarById = (id: number): Car | undefined => {
+    const getCarById = useCallback((id: number): Car | undefined => {
         let cars: Car[] | undefined = carStore.cars?.filter(car => { return car.id === id; });
         if (cars) {
             if (cars.length === 1) {
@@ -56,7 +40,34 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
             console.error("Unexpected number of cars: no car exists with id: " + id);
             return undefined;
         }
-    }
+    }, [carStore.cars]);
+
+    const setCar = useCallback(async (carId: string | undefined | null): Promise<boolean> => {
+        //Check if the carId parameter is valid
+        if (carId && (+carId !== 0) && !isNaN(+carId)) {
+            let car: Car | undefined = getCarById(+carId);
+            if (car) {
+                reservationStore.setCar(car);
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
+    }, [reservationStore, getCarById]);
+
+    useEffect(() => {
+        userStore.loadUser();
+        //Fetch cars to fill the dropdown
+        //Inner function trick to be able to use async function inside useEffect
+        const fetchData = async () => {
+            await carStore.getCars();
+            await setCar(carId);
+            await reservationStore.reloadReservations();
+        }
+
+        fetchData();
+    }, [userStore, reservationStore, carId, carStore, setCar]);
 
     let handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const dateParts = event.target.value.split("-");
@@ -66,13 +77,11 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
         reservationStore.reloadReservations();
     }
 
-    let handleCarDropdownSelection = (eventKey: string | null) => {
-        if (eventKey && !isNaN(+eventKey)) {
-            let car: Car | undefined = getCarById(+eventKey);
-            if (car) {
-                reservationStore.setCar(car);
-                reservationStore.reloadReservations();
-            }
+    let handleCarDropdownSelection = async (eventKey: string | null) => {
+        let loaded: boolean = await setCar(eventKey);
+        await reservationStore.reloadReservations();
+        if (loaded) {
+            navigate(`${RESERVATION_PAGE}/${eventKey!}`);
         }
     }
 
@@ -82,24 +91,38 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
 
     return (
         <div>
-            <DropdownButton className="d-flex justify-content-center mb-2" id="dropdown-basic-button" title={reservationStore.car ? displayName(reservationStore.car) : "Select a car"} onSelect={handleCarDropdownSelection}>
-                {
-                    carStore.cars?.map(car => {
-                        return (
-                            <Dropdown.Item key={car.id}>{displayName(car)}</Dropdown.Item>
+            <div className="centered-selector-container">
+                <DropdownButton className="d-flex justify-content-center mb-2" id="dropdown-basic-button" title={reservationStore.car ? displayName(reservationStore.car) : "Select a car"} onSelect={handleCarDropdownSelection}>
+                    {
+                        carStore.cars?.map(car => {
+                            return (
+                                <Dropdown.Item key={car.id} eventKey={car.id}>{displayName(car)}</Dropdown.Item>
+                            )
+                        }
                         )
                     }
-                    )
-                }
-            </DropdownButton>
-            <Form className="d-flex justify-content-center mb-2">
-                <Form.Control type="date" className="narrow-datepicker" onChange={handleDateChange} />
-            </Form>
-            {
-                reservationStore.car && reservationStore.car.id ?
-                    <ReservationCalendar userStore={userStore} reservationStore={reservationStore} /> :
-                    <div></div>
-            }
+                </DropdownButton>
+                <Form className="d-flex justify-content-center mb-2">
+                    <Form.Control type="date" className="narrow-datepicker" onChange={handleDateChange} />
+                </Form>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><div className="free little-square"></div></td>
+                            <td><div>Available</div></td>
+                            <td><div className="reserved little-square"></div></td>
+                            <td><div>Reserved by others</div></td>
+                        </tr>
+                        <tr>
+                            <td><div className="own little-square"></div></td>
+                            <td><div>Reserved by me</div></td>
+                            <td><div className="inactive little-square"></div></td>
+                            <td><div>No car selected</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ReservationCalendar userStore={userStore} reservationStore={reservationStore} />
         </div>
     )
 }

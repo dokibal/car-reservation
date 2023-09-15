@@ -31,10 +31,8 @@ const CarCard = ({ car, carStore }: CarCardProps) => {
         >
             <Card.Body>
                 <Card.Title className="over-flow-text">{car.brand} {car.model}</Card.Title>
-                <Card.Text>
-                    <p className="over-flow-text">Registration number: {car.registrationNumber}</p>
-                    <p className="over-flow-text">Capacity: {car.capacity}</p>
-                </Card.Text>
+                <p className="over-flow-text">Registration number: {car.registrationNumber}</p>
+                <p className="over-flow-text">Capacity: {car.capacity}</p>
                 <Button variant="primary" onClick={editCar}>Edit</Button>
             </Card.Body>
         </Card>

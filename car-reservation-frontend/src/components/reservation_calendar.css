@@ -1,13 +1,14 @@
-.calendar-container{
-    
-}
-.table-center{
+.calendar-container {}
+
+.table-center {
     text-align: center;
     min-width: 100px;
     padding: 5px;
     position: relative;
+    font-weight: bold;
 }
-.reservation-slot{
+
+.reservation-slot {
     display: flex;
     position: absolute;
     top: 10%;
@@ -18,13 +19,23 @@
     align-items: center;
     cursor: pointer;
 }
-.free{
-    background-color: green;
+
+.inactive {
+    background-color: grey;
+    cursor: default;
 }
-.reserved{
+
+.free {
+    background-color: green;
+    cursor: pointer;
+}
+
+.reserved {
     background-color: red;
     cursor: default;
 }
-.own{
+
+.own {
     background-color: yellow;
+    cursor: pointer;
 }

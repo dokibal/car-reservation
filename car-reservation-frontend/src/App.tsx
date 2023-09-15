@@ -24,7 +24,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path={MAIN_PAGE} element={<MainPage/>}></Route>
-          <Route path={SIGN_IN_PAGE} element={<LoginPage userStore={observableUserStore} />}></Route>
+          <Route path={SIGN_IN_PAGE+"/:carId"} element={<LoginPage userStore={observableUserStore} />}></Route>
           <Route path={SIGN_UP_PAGE} element={<SignUpPage userStore={observableUserStore} />}></Route>
           <Route path={RESERVATION_PAGE+"/:carId"} element={<ReservationList userStore={observableUserStore} reservationStore={observableReservationStore} carStore={observableCarStore} />}></Route>
           <Route path={CAR_PAGE} element={<CarList userStore={observableUserStore} carStore={observableCarStore} />}></Route>

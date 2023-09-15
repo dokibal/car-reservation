@@ -63,4 +63,5 @@ class ReservationService {
         }
     }
 }
-export default new ReservationService();
+const reservationService : ReservationService = new ReservationService();
+export default reservationService;

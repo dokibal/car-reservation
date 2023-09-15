@@ -6,6 +6,8 @@ import "./reservation_calendar.css";
 import { Reservation } from "../types/reservation";
 import ReservationDialog from "./reservation_dialog";
 import { Days } from "../types/days";
+import { useNavigate } from "react-router-dom";
+import { SIGN_IN_PAGE } from "../constants/config";
 
 interface ReservationCalendarProps {
     userStore: UserStore;
@@ -14,9 +16,12 @@ interface ReservationCalendarProps {
 
 const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalendarProps) => {
 
+    const navigate = useNavigate();
+
     function formatNumberWithLeadingZero(num: number): string {
         return new Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 }).format(num);
     }
+
     function formatHour(num: number): string {
         return formatNumberWithLeadingZero(num) + ":00";
     }
@@ -43,6 +48,14 @@ const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalenda
         if (reservation.id && reservation.user.id != userStore.currentUser.id) {
             return;
         }
+        if (!reservation.car || !reservation.car.id){
+            return;
+        }
+        //Don't do anything if the user is not signed in
+        if (!userStore.currentUser || !userStore.currentUser.id){
+            navigate(`${SIGN_IN_PAGE}/${reservation.car.id}`);
+            return;
+        }
         reservationStore.currentReservation = reservation;
         reservationStore.currentReservation.user = userStore.currentUser;
         reservationStore.setShowReservationDialog(true);
@@ -50,8 +63,13 @@ const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalenda
 
     let getReservationSlotClass = (res: Reservation) => {
         let baseClass : String = "reservation-slot";
+
+        if(!reservationStore.car || !reservationStore.car.id){
+            return baseClass + " inactive";
+        }
+
         if(res.id){
-            if(res.user.id == userStore.currentUser.id){
+            if(userStore.currentUser && res.user.id == userStore.currentUser.id){
                 return baseClass + " own";
             }
             else{

@@ -97,8 +97,10 @@ export class ReservationStore {
 
         let endDate = new Date(this.startDate);
         endDate.setDate(this.startDate.getDate() + 7);
-
-        await this.getReservations(this.startDate, endDate);
+        
+        if(this.car && this.car.id){
+            await this.getReservations(this.startDate, endDate);
+        }
 
         this.clearViewedReservations();
         this.clearViewedDates();
