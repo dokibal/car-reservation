@@ -43,6 +43,7 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
     }, [carStore.cars]);
 
     const setCar = useCallback(async (carId: string | undefined | null): Promise<boolean> => {
+
         //Check if the carId parameter is valid
         if (carId && (+carId !== 0) && !isNaN(+carId)) {
             let car: Car | undefined = getCarById(+carId);
@@ -61,13 +62,13 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
         //Fetch cars to fill the dropdown
         //Inner function trick to be able to use async function inside useEffect
         const fetchData = async () => {
-            await carStore.getCars();
+            await carStore.loadCars();
             await setCar(carId);
             await reservationStore.reloadReservations();
         }
 
         fetchData();
-    }, [userStore, reservationStore, carId, carStore, setCar]);
+    }, [carId]);
 
     let handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const dateParts = event.target.value.split("-");

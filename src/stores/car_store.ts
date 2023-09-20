@@ -5,7 +5,7 @@ import { Nullable } from '../types/nullable';
 
 export class CarStore {
   currentCar: Car = new CarImpl();
-  cars: Car[] | null = null;
+  cars: Car[] = [];
   showCarDialog: boolean = false;
   carIssues: string[] = [];
 
@@ -15,7 +15,8 @@ export class CarStore {
       carIssues: observable,
       showCarDialog: observable,
       pushCarIssue: action,
-      getCars: action,
+      loadCars: action,
+      setCars: action,
       setShowCarDialog: action,
       clearCarIssues: action,
       clearCurrentCar: action
@@ -26,11 +27,15 @@ export class CarStore {
     return await CarService.save(this.currentCar);
   }
 
-  async getCars() {
-    const fetchedCars = await CarService.getCars();
+  async loadCars() {
+    const fetchedCars = await CarService.loadCars();
     if (fetchedCars) {
-      this.cars = fetchedCars;
+      this.setCars(fetchedCars);
     }
+  }
+
+  setCars(cars : Car[]){
+    this.cars = cars;
   }
 
   setShowCarDialog(show: boolean) {

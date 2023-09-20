@@ -51,7 +51,7 @@ const CarDialog = ({ carStore }: CarDialogProps) => {
         let car: Nullable<Car> = await carStore.save();
         if (car !== null && car.id) {
             carStore.setShowCarDialog(false);
-            carStore.getCars();
+            carStore.loadCars();
             carStore.clearCurrentCar();
         }
     }

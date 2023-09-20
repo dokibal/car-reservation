@@ -1,4 +1,4 @@
-export const RESERVATION_API_BASE_URL : string = "http://localhost:8080/api/v1";
+export const RESERVATION_API_BASE_URL : string = "https://car-reservation-manager-7df5361893c4.herokuapp.com/api/v1";
 
 //Page titles
 export const MAIN_PAGE : string = "/";

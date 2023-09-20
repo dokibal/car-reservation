@@ -4,7 +4,7 @@ import { Car } from '../types/car';
 import { Nullable } from '../types/nullable';
 
 class CarService{
-    async getCars(){
+    async loadCars() : Promise<Car[] | undefined>{
         let url:string = RESERVATION_API_BASE_URL + "/cars";
         try{
             let cars:Car[] = (await axios.get(url)).data;
