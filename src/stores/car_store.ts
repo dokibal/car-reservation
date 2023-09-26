@@ -7,6 +7,7 @@ export class CarStore {
   currentCar: Car = new CarImpl();
   cars: Car[] = [];
   showCarDialog: boolean = false;
+  showCarRemovalDialog: boolean = false;
   carIssues: string[] = [];
 
   constructor() {
@@ -14,10 +15,12 @@ export class CarStore {
       cars: observable,
       carIssues: observable,
       showCarDialog: observable,
+      showCarRemovalDialog: observable,
       pushCarIssue: action,
       loadCars: action,
       setCars: action,
       setShowCarDialog: action,
+      setShowCarRemovalDialog: action,
       clearCarIssues: action,
       clearCurrentCar: action
     });
@@ -25,6 +28,10 @@ export class CarStore {
 
   async save(): Promise<Nullable<Car>> {
     return await CarService.save(this.currentCar);
+  }
+
+  async removeCar(): Promise<Boolean> {
+    return await CarService.removeCar(this.currentCar);
   }
 
   async loadCars() {
@@ -40,6 +47,10 @@ export class CarStore {
 
   setShowCarDialog(show: boolean) {
     this.showCarDialog = show;
+  }
+
+  setShowCarRemovalDialog(show: boolean) {
+    this.showCarRemovalDialog = show;
   }
 
   clearCarIssues() {

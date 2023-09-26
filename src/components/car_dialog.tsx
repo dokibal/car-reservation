@@ -44,6 +44,10 @@ const CarDialog = ({ carStore }: CarDialogProps) => {
         }
     }
 
+    const showCarRemovalConfirmation = () => {
+        carStore.setShowCarRemovalDialog(true);
+    }
+
     const saveCar = async () => {
         if (!validateCarInput()) {
             return;
@@ -76,7 +80,7 @@ const CarDialog = ({ carStore }: CarDialogProps) => {
 
         <div>
             <Modal
-                show={carStore.showCarDialog}
+                show={!carStore.showCarRemovalDialog && carStore.showCarDialog}
                 onHide={() => { carStore.setShowCarDialog(false) }}
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
@@ -140,6 +144,7 @@ const CarDialog = ({ carStore }: CarDialogProps) => {
 
                 <Modal.Footer>
                     <Button variant="primary" onClick={() => { saveCar() }}>Save</Button>
+                    <Button variant="danger" onClick={() => { showCarRemovalConfirmation() }}>Remove</Button>
                     <Button variant="secondary" onClick={() => { carStore.setShowCarDialog(false) }}>Close</Button>
 
                 </Modal.Footer>
