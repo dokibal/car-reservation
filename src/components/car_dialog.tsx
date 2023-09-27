@@ -1,18 +1,21 @@
 import { CarStore } from "../stores/car_store";
+import { CommonStore } from "../stores/common_store";
 import { observer } from 'mobx-react-lite';
 import { Modal } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import CenteredSpinner from './centered_spinner'
 
 import "./reservation_calendar.css";
 import { Car } from "../types/car";
 import { Nullable } from "../types/nullable";
 
 interface CarDialogProps {
+    commonStore: CommonStore;
     carStore: CarStore;
 }
 
-const CarDialog = ({ carStore }: CarDialogProps) => {
+const CarDialog = ({ commonStore, carStore }: CarDialogProps) => {
 
     const validateEmptyField = (value: string, name: string): void => {
         if (value === "") {
@@ -52,7 +55,10 @@ const CarDialog = ({ carStore }: CarDialogProps) => {
         if (!validateCarInput()) {
             return;
         }
+        
+        commonStore.toggleLoading(true);
         let car: Nullable<Car> = await carStore.save();
+        commonStore.toggleLoading(false);
         if (car !== null && car.id) {
             carStore.setShowCarDialog(false);
             carStore.loadCars();
@@ -86,12 +92,12 @@ const CarDialog = ({ carStore }: CarDialogProps) => {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
-
                 <Modal.Header closeButton>
                     <Modal.Title>{carStore.currentCar.id ? "Edit car" : "New car"}</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
+                    {<CenteredSpinner commonStore={commonStore}/>}
                     {carStore.carIssues.length ?
                         <div className="alert alert-danger" role="alert">
                             <strong>
@@ -144,7 +150,7 @@ const CarDialog = ({ carStore }: CarDialogProps) => {
 
                 <Modal.Footer>
                     <Button variant="primary" onClick={() => { saveCar() }}>Save</Button>
-                    <Button variant="danger" onClick={() => { showCarRemovalConfirmation() }}>Remove</Button>
+                    {carStore.currentCar.id ? <Button variant="danger" onClick={() => { showCarRemovalConfirmation() }}>Remove</Button>:<div></div>}
                     <Button variant="secondary" onClick={() => { carStore.setShowCarDialog(false) }}>Close</Button>
 
                 </Modal.Footer>

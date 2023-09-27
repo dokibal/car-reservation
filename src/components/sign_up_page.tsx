@@ -1,35 +1,23 @@
 import { UserStore } from '../stores/user_store'
+import { CommonStore } from "../stores/common_store";
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom'
 import UserService from '../services/user_service'
 import { useEffect } from 'react'
-import {MAIN_PAGE, SIGN_IN_PAGE} from '../constants/config';
+import { MAIN_PAGE } from '../constants/config';
 
 import './sign_up_page.css'
+import CenteredSpinner from'./centered_spinner'
+import UserInfo from'./user_info'
 
 interface SignUpPageProps {
+    commonStore: CommonStore;
     userStore: UserStore;
 }
 
-const SignUpPage = ({ userStore }: SignUpPageProps) => {
+const SignUpPage = ({ commonStore, userStore }: SignUpPageProps) => {
 
     const navigate = useNavigate();
-
-    const typeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-        userStore.editEmail(event.target.value);
-    }
-
-    const typePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-        userStore.editPassword(event.target.value);
-    }
-
-    const typeDisplayName = (event: React.ChangeEvent<HTMLInputElement>) => {
-        userStore.editDisplayName(event.target.value);
-    }
-
-    const typePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
-        userStore.editPhoneNumber(event.target.value);
-    }
 
     function validateEmptyField(value: string, name: string): void {
         if (value === "") {
@@ -39,7 +27,10 @@ const SignUpPage = ({ userStore }: SignUpPageProps) => {
 
     async function validateEmail(value: string) {
 
-        if (await UserService.userExists(value)) {
+        commonStore.toggleLoading(true);
+        let exists : boolean = await UserService.userExists(value);
+        commonStore.toggleLoading(false);
+        if (exists) {
             userStore.pushSignupIssue("User with the given e-mail address already exists.")
             return;
         }
@@ -135,93 +126,34 @@ const SignUpPage = ({ userStore }: SignUpPageProps) => {
         }
     }
 
-    function navigateToLogin() {
-        navigate(SIGN_IN_PAGE);
-    }
-
-    useEffect(()=>{
+    useEffect(() => {
         userStore.clearSigninIssues();
         userStore.resetUser();
-    },[userStore])
+    }, [userStore])
 
     return (
-                    <div className="centered-content">
-                        {userStore.signupIssues.length ?
-                            <div className="alert alert-danger" role="alert">
-                                <strong>
-                                    Please correct the following issues to sign up.
-                                </strong>
-                                <ul>
-                                    {userStore.signupIssues.map((issue, id) => {
-                                        return (
-                                            <li key={id.toString()}>
-                                                {issue}
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>
-                            :
-                            <div></div>
-                        }
-                        <form>
-                            <div className="user-form-group form-group">
-                                <label htmlFor="inputEmail">Email address</label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="inputEmail"
-                                    aria-describedby="emailHelp"
-                                    placeholder="john.doe@gmail.com"
-                                    value={userStore.currentUser.email}
-                                    onChange={typeEmail}
-                                >
-                                </input>
-                            </div>
-                            <div className="user-form-group form-group">
-                                <label htmlFor="inputPassword">Password</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="inputPassword"
-                                    placeholder="Password"
-                                    value={userStore.currentUser.password}
-                                    onChange={typePassword}
-                                >
-                                </input>
-                                <small id="passwordHelp" className="form-text text-muted">Minimum length of password is 8. It should contain at least one number and one letter.</small>
-                            </div>
-                            <div className="user-form-group form-group">
-                                <label htmlFor="inputDisplayName">Display name</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="inputDisplayName"
-                                    placeholder="John Doe"
-                                    value={userStore.currentUser.displayName}
-                                    onChange={typeDisplayName}
-                                >
-                                </input>
-                            </div>
-                            <div className="user-form-group form-group">
-                                <label htmlFor="inputPhone">Phone number</label>
-                                <input
-                                    type="tel"
-                                    className="form-control"
-                                    id="inputPhone"
-                                    placeholder="+36701111111"
-                                    value={userStore.currentUser.phoneNumber}
-                                    onChange={typePhoneNumber}
-                                >
-                                </input>
-                                <small id="phoneHelp" className="form-text text-muted">Input format: +36701111111</small>
-                            </div>
-                            <div className="action-button-container">
-                                <button type="button" className="action-button btn btn-primary" onClick={signup}>Sign up</button>
-                                <button type="button" className="action-button btn btn-secondary" onClick={navigateToLogin}>Sign in</button>
-                            </div>
-                        </form>
-                    </div>
-                )
+        <div className="centered-content">
+            <CenteredSpinner commonStore={commonStore} />
+            {userStore.signupIssues.length ?
+                <div className="alert alert-danger" role="alert">
+                    <strong>
+                        Please correct the following issues to sign up.
+                    </strong>
+                    <ul>
+                        {userStore.signupIssues.map((issue, id) => {
+                            return (
+                                <li key={id.toString()}>
+                                    {issue}
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+                :
+                <div></div>
+            }
+            <UserInfo signup={signup} readonly={false} userStore={userStore}/>
+        </div>
+    )
 }
 export default observer(SignUpPage);

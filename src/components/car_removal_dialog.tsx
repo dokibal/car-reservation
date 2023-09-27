@@ -1,24 +1,31 @@
 import { CarStore } from "../stores/car_store";
+import { CommonStore } from "../stores/common_store";
 import { observer } from 'mobx-react-lite';
 import { Modal } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
+import CenteredSpinner from'./centered_spinner'
 
 import "./reservation_calendar.css";
 
 interface CarRemovalDialogProps {
+    commonStore: CommonStore;
     carStore: CarStore;
 }
 
-const CarRemovalDialog = ({ carStore }: CarRemovalDialogProps) => {
+const CarRemovalDialog = ({ commonStore, carStore }: CarRemovalDialogProps) => {
 
     const removeCar = async () => {
 
-        let success : Boolean = await carStore.removeCar();
+        commonStore.toggleLoading(true);
+        let success: Boolean = await carStore.removeCar();
+        commonStore.toggleLoading(false);
 
         if (success) {
+            commonStore.toggleLoading(true);
             await carStore.loadCars();
+            commonStore.toggleLoading(false);
         }
-        
+
         carStore.setShowCarRemovalDialog(false);
         carStore.setShowCarDialog(false);
         carStore.clearCurrentCar();
@@ -35,6 +42,7 @@ const CarRemovalDialog = ({ carStore }: CarRemovalDialogProps) => {
                 centered
             >
                 <Modal.Body>
+                    {<CenteredSpinner commonStore={commonStore}/>}
                     <h4>
                         Are you sure you would like to remove the current car and all corresponding reservations?
                     </h4>

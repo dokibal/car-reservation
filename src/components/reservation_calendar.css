@@ -1,4 +1,6 @@
-.calendar-container {}
+.reservation-table {
+    width:80%;
+}
 
 .table-center {
     text-align: center;

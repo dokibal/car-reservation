@@ -1,7 +1,9 @@
 import { UserStore } from "../stores/user_store";
+import { CommonStore } from "../stores/common_store";
 import { ReservationStore } from "../stores/reservation_store";
 import { observer } from 'mobx-react-lite';
 import { Modal } from "react-bootstrap";
+import CenteredSpinner from './centered_spinner'
 import Button from 'react-bootstrap/Button';
 
 import "./reservation_calendar.css";
@@ -9,11 +11,12 @@ import { Reservation } from "../types/reservation";
 import { Nullable } from "../types/nullable";
 
 interface ReservationDialogProps {
+    commonStore: CommonStore;
     userStore: UserStore;
     reservationStore: ReservationStore;
 }
 
-const ReservationDialog = ({ userStore, reservationStore }: ReservationDialogProps) => {
+const ReservationDialog = ({ commonStore, userStore, reservationStore }: ReservationDialogProps) => {
 
     const showReservationDetails = (res: Reservation) => {
         return (
@@ -31,7 +34,9 @@ const ReservationDialog = ({ userStore, reservationStore }: ReservationDialogPro
     }
 
     const save = async () => {
+        commonStore.toggleLoading(true);
         let reservation: Nullable<Reservation> = await reservationStore.save();
+        commonStore.toggleLoading(false);
         if (reservation !== null && reservation.id) {
             reservationStore.setShowReservationDialog(false);
             reservationStore.reloadReservations();
@@ -39,7 +44,9 @@ const ReservationDialog = ({ userStore, reservationStore }: ReservationDialogPro
     }
 
     const cancel = async () => {
+        commonStore.toggleLoading(true);
         let deleted = await reservationStore.cancel();
+        commonStore.toggleLoading(false);
         reservationStore.setShowReservationDialog(false);
         if (deleted) {
             reservationStore.reloadReservations();
@@ -58,10 +65,15 @@ const ReservationDialog = ({ userStore, reservationStore }: ReservationDialogPro
             >
 
                 <Modal.Header closeButton>
-                    <Modal.Title>Confirm reservation</Modal.Title>
+                    {reservationStore.currentReservation.id ?
+                        <Modal.Title>Manage reservation</Modal.Title> :
+                        <Modal.Title>Confirm reservation</Modal.Title>
+                    }
+
                 </Modal.Header>
 
                 <Modal.Body>
+                    {<CenteredSpinner commonStore={commonStore} />}
                     {reservationStore.currentReservation.id ?
                         <div>
                             {showReservationDetails(reservationStore.currentReservation)}

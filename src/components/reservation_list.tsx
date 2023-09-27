@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from "react";
 import { CarStore } from "../stores/car_store";
 import { UserStore } from "../stores/user_store";
 import { ReservationStore } from "../stores/reservation_store";
+import { CommonStore } from "../stores/common_store";
 import { observer } from 'mobx-react-lite';
 import ReservationCalendar from "./reservation_calendar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,14 +13,17 @@ import "./reservation_list.css"
 import { Car } from "../types/car";
 import { RESERVATION_PAGE } from "../constants/config";
 import "./reservation_calendar.css"
+import CenteredSpinner from './centered_spinner'
+import { Container, Row, Col } from 'react-bootstrap'
 
 interface ReservationListProps {
+    commonStore: CommonStore;
     userStore: UserStore;
     reservationStore: ReservationStore;
     carStore: CarStore;
 }
 
-const ReservationList = ({ userStore, reservationStore, carStore }: ReservationListProps) => {
+const ReservationList = ({ commonStore, userStore, reservationStore, carStore }: ReservationListProps) => {
 
     const { carId } = useParams();
 
@@ -62,9 +66,12 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
         //Fetch cars to fill the dropdown
         //Inner function trick to be able to use async function inside useEffect
         const fetchData = async () => {
+
+            commonStore.toggleLoading(true);
             await carStore.loadCars();
             await setCar(carId);
             await reservationStore.reloadReservations();
+            commonStore.toggleLoading(false);
         }
 
         fetchData();
@@ -79,8 +86,10 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
     }
 
     let handleCarDropdownSelection = async (eventKey: string | null) => {
+        commonStore.toggleLoading(true);
         let loaded: boolean = await setCar(eventKey);
         await reservationStore.reloadReservations();
+        commonStore.toggleLoading(false);
         if (loaded) {
             navigate(`${RESERVATION_PAGE}/${eventKey!}`);
         }
@@ -91,7 +100,13 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
     }
 
     return (
+
         <div>
+            {!reservationStore.showReservationDialog ?
+                <CenteredSpinner commonStore={commonStore} />
+                :
+                <div></div>
+            }
             <div className="centered-selector-container">
                 <DropdownButton className="d-flex justify-content-center mb-2" id="dropdown-basic-button" title={reservationStore.car ? displayName(reservationStore.car) : "Select a car"} onSelect={handleCarDropdownSelection}>
                     {
@@ -106,7 +121,7 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
                 <Form className="d-flex justify-content-center mb-2">
                     <Form.Control type="date" className="narrow-datepicker" onChange={handleDateChange} />
                 </Form>
-                <table>
+                <table className="reservation-info-table">
                     <tbody>
                         <tr>
                             <td><div className="free little-square"></div></td>
@@ -123,7 +138,7 @@ const ReservationList = ({ userStore, reservationStore, carStore }: ReservationL
                     </tbody>
                 </table>
             </div>
-            <ReservationCalendar userStore={userStore} reservationStore={reservationStore} />
+            <ReservationCalendar commonStore={commonStore} userStore={userStore} reservationStore={reservationStore} />
         </div>
     )
 }

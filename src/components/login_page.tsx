@@ -1,18 +1,21 @@
 import { UserStore } from '../stores/user_store'
+import { CommonStore } from "../stores/common_store";
 import { observer } from 'mobx-react-lite';
 import { useNavigate, useParams } from 'react-router-dom'
 import UserService from '../services/user_service'
 import { User } from '../types/user'
 import { useEffect } from 'react'
-import { MAIN_PAGE, RESERVATION_PAGE, SIGN_UP_PAGE} from '../constants/config';
+import { MAIN_PAGE, RESERVATION_PAGE, SIGN_UP_PAGE } from '../constants/config';
+import CenteredSpinner from'./centered_spinner'
 
 import './login_page.css'
 
 interface LoginPageProps {
+    commonStore: CommonStore;
     userStore: UserStore;
 }
 
-const LoginPage = ({ userStore }: LoginPageProps) => {
+const LoginPage = ({ commonStore, userStore }: LoginPageProps) => {
 
     const navigate = useNavigate();
 
@@ -27,7 +30,10 @@ const LoginPage = ({ userStore }: LoginPageProps) => {
     }
 
     const validateUser = async (): Promise<User> => {
-        return await UserService.validateUser(userStore.currentUser);
+        commonStore.toggleLoading(true);
+        let user : User = await UserService.validateUser(userStore.currentUser);
+        commonStore.toggleLoading(false);
+        return user;
     }
 
     function validateEmptyField(value: string, name: string) {
@@ -52,7 +58,9 @@ const LoginPage = ({ userStore }: LoginPageProps) => {
             return;
         }
         //Only start user validation if both fields are filled
+        commonStore.toggleLoading(true);
         let user: User = await validateUser();
+        commonStore.toggleLoading(false);
         if (user && user.id) {
             userStore.signin(user);
             if (carId) {
@@ -79,6 +87,7 @@ const LoginPage = ({ userStore }: LoginPageProps) => {
     return (
 
         <div className="centered-content" onKeyDownCapture={handleKeyDown}>
+            {<CenteredSpinner commonStore={commonStore} />}
             {userStore.signinIssues.length ?
                 <div className="alert alert-danger" role="alert">
                     <strong>

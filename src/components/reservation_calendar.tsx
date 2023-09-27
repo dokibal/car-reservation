@@ -1,5 +1,6 @@
 import { UserStore } from "../stores/user_store";
 import { ReservationStore } from "../stores/reservation_store";
+import { CommonStore } from "../stores/common_store";
 import { observer } from 'mobx-react-lite';
 import "./reservation_calendar.css";
 import { Reservation } from "../types/reservation";
@@ -9,11 +10,12 @@ import { useNavigate } from "react-router-dom";
 import { SIGN_IN_PAGE } from "../constants/config";
 
 interface ReservationCalendarProps {
+    commonStore: CommonStore;
     userStore: UserStore;
     reservationStore: ReservationStore;
 }
 
-const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalendarProps) => {
+const ReservationCalendar = ({ commonStore, userStore, reservationStore }: ReservationCalendarProps) => {
 
     const navigate = useNavigate();
 
@@ -82,7 +84,7 @@ const ReservationCalendar = ({ userStore, reservationStore }: ReservationCalenda
 
     return (
         <div className="centered-content">
-            <ReservationDialog userStore={userStore} reservationStore={reservationStore} />
+            <ReservationDialog commonStore={commonStore} userStore={userStore} reservationStore={reservationStore} />
             <table>
                 <thead>
                     <tr>
