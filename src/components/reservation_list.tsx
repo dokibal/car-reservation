@@ -107,39 +107,48 @@ const ReservationList = ({ commonStore, userStore, reservationStore, carStore }:
                 :
                 <div></div>
             }
-            <div className="centered-selector-container">
-                <DropdownButton className="d-flex justify-content-center mb-2" id="dropdown-basic-button" title={reservationStore.car ? displayName(reservationStore.car) : "Select a car"} onSelect={handleCarDropdownSelection}>
-                    {
-                        carStore.cars?.map(car => {
-                            return (
-                                <Dropdown.Item key={car.id} eventKey={car.id}>{displayName(car)}</Dropdown.Item>
-                            )
-                        }
-                        )
-                    }
-                </DropdownButton>
-                <Form className="d-flex justify-content-center mb-2">
-                    <Form.Control type="date" className="narrow-datepicker" onChange={handleDateChange} />
-                </Form>
-                <table className="reservation-info-table">
-                    <tbody>
-                        <tr>
-                            <td><div className="free little-square"></div></td>
-                            <td><div>Available</div></td>
-                            <td><div className="reserved little-square"></div></td>
-                            <td><div>Reserved by others</div></td>
-                        </tr>
-                        <tr>
-                            <td><div className="own little-square"></div></td>
-                            <td><div>Reserved by me</div></td>
-                            <td><div className="inactive little-square"></div></td>
-                            <td><div>No car selected</div></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <Container>
+                <Row>
+                    <Col lg={6}>
+
+                        <div className="centered-selector-container">
+                            <DropdownButton className="d-flex justify-content-center mb-2" id="dropdown-basic-button" title={reservationStore.car ? displayName(reservationStore.car) : "Select a car"} onSelect={handleCarDropdownSelection}>
+                                {
+                                    carStore.cars?.map(car => {
+                                        return (
+                                            <Dropdown.Item key={car.id} eventKey={car.id}>{displayName(car)}</Dropdown.Item>
+                                        )
+                                    }
+                                    )
+                                }
+                            </DropdownButton>
+                            <Form className="d-flex justify-content-center mb-2">
+                                <Form.Control type="date" className="narrow-datepicker" onChange={handleDateChange} />
+                            </Form>
+                        </div>
+                    </Col>
+                    <Col lg={6} style={{display:"flex", justifyContent:"center"}}>
+                        <table className="reservation-info-table">
+                            <tbody>
+                                <tr>
+                                    <td><div className="free little-square"></div></td>
+                                    <td><div>Available</div></td>
+                                    <td><div className="reserved little-square"></div></td>
+                                    <td><div>Reserved by others</div></td>
+                                </tr>
+                                <tr>
+                                    <td><div className="own little-square"></div></td>
+                                    <td><div>Reserved by me</div></td>
+                                    <td><div className="inactive little-square"></div></td>
+                                    <td><div>No car selected</div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </Col>
+                </Row>
+            </Container>
             <ReservationCalendar commonStore={commonStore} userStore={userStore} reservationStore={reservationStore} />
-        </div>
+        </div >
     )
 }
 
