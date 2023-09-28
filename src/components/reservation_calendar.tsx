@@ -38,7 +38,7 @@ const ReservationCalendar = ({ commonStore, userStore, reservationStore }: Reser
             </div>
             <div>
                 {
-                    Days[(date.getDay() as Days)]
+                    Days[(date.getDay() as Days)].slice(0,3)
                 }
             </div>
         </div>)
