@@ -1,0 +1,9 @@
+.carcard{
+    width: 18rem;
+    cursor: pointer;
+    background-color: #808080;
+    color:white;
+    font-weight: bold;
+    border-color: #808080;
+    box-shadow: 10px 10px 8px #808080;
+}

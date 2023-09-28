@@ -1,10 +1,5 @@
 import { UserStore } from '../stores/user_store'
-import { CommonStore } from "../stores/common_store";
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom'
-import UserService from '../services/user_service'
-import { useEffect } from 'react'
-import { MAIN_PAGE } from '../constants/config';
 
 import './sign_up_page.css'
 import UserInfo from'./user_info'

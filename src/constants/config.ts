@@ -4,6 +4,7 @@ export const RESERVATION_API_BASE_URL : string = "https://car-reservation-manage
 //Page titles
 export const MAIN_PAGE : string = "/";
 export const SIGN_IN_PAGE : string = "/signin";
+export const SIGN_IN_PAGE_EMPTY : string = `${SIGN_IN_PAGE}/0`;
 export const SIGN_UP_PAGE : string = "/signup";
 export const RESERVATION_PAGE : string = "/reservations";
 export const CAR_PAGE : string = "/cars";

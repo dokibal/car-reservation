@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { MAIN_PAGE, SIGN_IN_PAGE, SIGN_UP_PAGE, RESERVATION_PAGE, CAR_PAGE, USER_PAGE } from '../constants/config';
+import { MAIN_PAGE, SIGN_IN_PAGE_EMPTY, SIGN_UP_PAGE, RESERVATION_PAGE, CAR_PAGE, USER_PAGE } from '../constants/config';
 import { UserStore } from "../stores/user_store";
 
 interface ReservationNavbarProps {
@@ -29,11 +29,11 @@ const ReservationNavbar = ({ userStore }: ReservationNavbarProps) => {
                         <Nav className="me-auto">
                             <Nav.Link href={USER_PAGE}>{userStore.currentUser.displayName}</Nav.Link>
                             {/* <Nav.Link href={USER_PAGE}>RMIRIAM</Nav.Link> */}
-                            <Nav.Link onClick={handleSignout}>Sign out</Nav.Link>
+                            <Nav.Link href={SIGN_IN_PAGE_EMPTY} onClick={handleSignout}>Sign out</Nav.Link>
                         </Nav>
                     :
                         <Nav className="me-auto">
-                            <Nav.Link href={SIGN_IN_PAGE + "/0"}>Sign in</Nav.Link>
+                            <Nav.Link href={SIGN_IN_PAGE_EMPTY}>Sign in</Nav.Link>
                             <Nav.Link href={SIGN_UP_PAGE}>Sign up</Nav.Link>
                         </Nav>
                 }

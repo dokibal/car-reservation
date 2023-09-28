@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { Car } from '../types/car';
 import { useNavigate } from 'react-router-dom';
 import { RESERVATION_PAGE } from '../constants/config';
+import './car_card.css'
 
 interface CarCardProps {
     car: Car;
@@ -26,7 +27,8 @@ const CarCard = ({ car, carStore }: CarCardProps) => {
     };
 
     return (
-        <Card style={{ width: '18rem', cursor: 'pointer' }}
+        <Card 
+            className="carcard"
             onClick={navigateToReservations}
         >
             <Card.Body>

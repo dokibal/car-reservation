@@ -1,7 +1,7 @@
 import { UserStore } from '../stores/user_store'
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom'
-import { SIGN_IN_PAGE } from '../constants/config';
+import { useNavigate } from 'react-router-dom';
+import { SIGN_IN_PAGE_EMPTY } from '../constants/config';
 
 import './sign_up_page.css'
 import './user_info.css'
@@ -17,7 +17,7 @@ const UserInfo = ({ signup, readonly, userStore }: UserInfoProps) => {
     const navigate = useNavigate();
 
     function navigateToLogin() {
-        navigate(SIGN_IN_PAGE);
+        navigate(SIGN_IN_PAGE_EMPTY);
     }
 
     return (
@@ -42,7 +42,7 @@ const UserInfo = ({ signup, readonly, userStore }: UserInfoProps) => {
             <div className="user-form-group form-group">
                 <label htmlFor="inputPassword">Password</label>
                 <input
-                    type="password"
+                    type={readonly ? "text" : "password"}
                     className="form-control"
                     id="inputPassword"
                     placeholder="Password"
