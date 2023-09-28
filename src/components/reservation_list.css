@@ -16,19 +16,10 @@
     margin-left:10px;
     margin-right:5px;
 }
-/* .vertical-center {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.reservation-info{
-    display:flex;
-    flex-direction: row;
-    margin:5px;
-    gap:5px;
-} */
 .reservation-info-table{
     margin-left:40px;
     border-spacing: 30px;
+}
+.one-line-div{
+    white-space: nowrap;
 }

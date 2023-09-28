@@ -2,6 +2,7 @@
 .table-center {
     text-align: center;
     width: 8vw;
+    max-width: 8vw;
     padding: 5px;
     position: relative;
     font-weight: bold;
