@@ -132,15 +132,15 @@ const ReservationList = ({ commonStore, userStore, reservationStore, carStore }:
                             <tbody>
                                 <tr>
                                     <td><div className="free little-square"></div></td>
-                                    <td><div>Available</div></td>
+                                    <td><div className="one-liner">Available</div></td>
                                     <td><div className="reserved little-square"></div></td>
-                                    <td><div>Reserved by others</div></td>
+                                    <td><div className="one-liner">Reserved by others</div></td>
                                 </tr>
                                 <tr>
                                     <td><div className="own little-square"></div></td>
-                                    <td><div>Reserved by me</div></td>
+                                    <td><div className="one-liner">Reserved by me</div></td>
                                     <td><div className="inactive little-square"></div></td>
-                                    <td><div>No car selected</div></td>
+                                    <td><div className="one-liner">No car selected</div></td>
                                 </tr>
                             </tbody>
                         </table>

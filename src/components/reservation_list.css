@@ -20,6 +20,7 @@
     margin-left:40px;
     border-spacing: 30px;
 }
-.one-line-div{
+.one-liner{
+    font-size:small;
     white-space: nowrap;
 }

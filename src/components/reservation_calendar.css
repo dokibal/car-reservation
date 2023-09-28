@@ -1,11 +1,16 @@
 
 .table-center {
     text-align: center;
-    width: 8vw;
-    max-width: 8vw;
+    width: 10vw;
+    max-width: 12vw;
     padding: 5px;
     position: relative;
     font-weight: bold;
+}
+@media (max-width: 768px) {
+    .table-center {
+        font-size: small;
+    }
 }
 
 .reservation-slot {
